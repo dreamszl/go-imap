@@ -13,6 +13,7 @@ import (
 
 // System message flags, defined in RFC 3501 section 2.3.2.
 const (
+	AllFlag      = "\\ALL"
 	SeenFlag     = "\\Seen"
 	AnsweredFlag = "\\Answered"
 	FlaggedFlag  = "\\Flagged"
