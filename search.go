@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+const (
+	// NoCharset will make the search command not set the charset parameter
+	NoCharset = "None"
+)
+
 func maybeString(mystery interface{}) string {
 	if s, ok := mystery.(string); ok {
 		return s
@@ -80,6 +85,8 @@ type SearchCriteria struct {
 
 	Not []*SearchCriteria    // Each criteria doesn't match
 	Or  [][2]*SearchCriteria // Each criteria pair has at least one match of two
+
+	Charset string // Charset to use
 }
 
 // NewSearchCriteria creates a new search criteria.
@@ -327,7 +334,7 @@ func (c *SearchCriteria) Format() []interface{} {
 	for _, flag := range c.WithFlags {
 		var subfields []interface{}
 		switch flag {
-		case AnsweredFlag, DeletedFlag, DraftFlag, FlaggedFlag, RecentFlag, SeenFlag:
+		case AnsweredFlag, DeletedFlag, DraftFlag, FlaggedFlag, RecentFlag, SeenFlag, AllFlag:
 			subfields = []interface{}{RawString(strings.ToUpper(strings.TrimPrefix(flag, "\\")))}
 		default:
 			subfields = []interface{}{RawString("KEYWORD"), flag}

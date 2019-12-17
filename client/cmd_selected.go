@@ -108,10 +108,18 @@ func (c *Client) executeSearch(uid bool, criteria *imap.SearchCriteria, charset 
 }
 
 func (c *Client) search(uid bool, criteria *imap.SearchCriteria) (ids []uint32, err error) {
-	ids, status, err := c.executeSearch(uid, criteria, "UTF-8")
+	charset := criteria.Charset
+	switch charset {
+	case imap.NoCharset:
+		charset = ""
+	case "":
+		charset = "UTF-8"
+	}
+	ids, status, err := c.executeSearch(uid, criteria, charset)
 	if status != nil && status.Code == imap.CodeBadCharset {
+		charset = "US-ASCII"
 		// Some servers don't support UTF-8
-		ids, _, err = c.executeSearch(uid, criteria, "US-ASCII")
+		ids, _, err = c.executeSearch(uid, criteria, charset)
 	}
 	return
 }
